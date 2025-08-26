@@ -1,0 +1,13 @@
+{
+  "module_name": "mic-speech-sentiment",
+  "namespace": "mcvella",
+  "language": "python",
+  "resource_type": "component",
+  "resource_subtype": "sensor",
+  "model_name": "mic-speech-sentiment",
+  "enable_cloud_build": false,
+  "initialize_git": false,
+  "generator_version": "0.1.0",
+  "generated_on": "2025-08-26T20:58:21.232302Z",
+  "module_readme_link": "README.md"
+}

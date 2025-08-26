@@ -1,0 +1,30 @@
+{
+  "components": [
+    {
+      "name": "speech_service",
+      "type": "service",
+      "model": "viam-labs:speech:stt-vosk",
+      "attributes": {
+        "model_name": "vosk-model-small-en-us-0.15",
+        "model_lang": "en-us",
+        "mic_device_name": "default"
+      }
+    },
+    {
+      "name": "sentiment_service", 
+      "type": "service",
+      "model": "mcvella:text-sentiment:text-sentiment",
+      "attributes": {}
+    },
+    {
+      "name": "mic_speech_sentiment",
+      "type": "sensor",
+      "model": "mcvella:mic-speech-sentiment:mic-speech-sentiment",
+      "attributes": {
+        "speech_service": "speech_service",
+        "sentiment_service": "sentiment_service",
+        "reading_expiration_seconds": 20
+      }
+    }
+  ]
+}

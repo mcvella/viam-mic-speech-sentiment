@@ -1,0 +1,30 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "mcvella:mic-speech-sentiment",
+  "visibility": "public",
+  "url": "https://github.com/mcvella/viam-mic-speech-sentiment",
+  "description": "A modular sensor component that combines speech-to-text and sentiment analysis capabilities. Continuously listens for speech and analyzes sentiment with configurable reading expiration.",
+  "models": [
+    {
+      "api": "rdk:component:sensor",
+      "model": "mcvella:mic-speech-sentiment:mic-speech-sentiment",
+      "short_description": "Sensor that listens for speech and analyzes sentiment in real-time",
+      "markdown_link": "README.md#model-mcvellamic-speech-sentimentmic-speech-sentiment"
+    }
+  ],
+  "applications": null,
+  "markdown_link": "README.md",
+  "entrypoint": "./run.sh",
+  "first_run": "",
+  "build": {
+    "build": "./build.sh",
+    "setup": "./setup.sh",
+    "path": "dist/archive.tar.gz",
+    "arch": [
+      "linux/amd64",
+      "linux/arm64",
+      "darwin/arm64",
+      "windows/amd64"
+    ]
+  }
+}

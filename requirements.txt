@@ -1,0 +1,6 @@
+
+viam-sdk==0.54.0
+
+typing-extensions
+
+speech_service_api @ git+https://github.com/viam-labs/speech-service-api.git@main
