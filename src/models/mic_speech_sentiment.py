@@ -11,7 +11,7 @@ from viam.proto.common import Geometry, ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.easy_resource import EasyResource
 from viam.resource.types import Model, ModelFamily
-from viam.services.service_base import ServiceBase
+from viam.services.generic import Generic
 from viam.utils import SensorReading, ValueTypes, struct_to_dict
 
 # Import the SpeechService from the speech-service-api
@@ -107,8 +107,8 @@ class MicSpeechSentiment(Sensor, EasyResource):
             self.speech_service = cast(SpeechService, speech_service_dep)
             
         if sentiment_service_name:
-            sentiment_service_dep = dependencies[ServiceBase.get_resource_name(sentiment_service_name)]
-            self.sentiment_service = cast(ServiceBase, sentiment_service_dep)
+            sentiment_service_dep = dependencies[Generic.get_resource_name(sentiment_service_name)]
+            self.sentiment_service = cast(Generic, sentiment_service_dep)
         
         if not self.speech_service:
             raise ValueError("speech_service dependency is required")
@@ -174,34 +174,34 @@ class MicSpeechSentiment(Sensor, EasyResource):
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
         **kwargs
-    ) -> Mapping[str, SensorReading]:
+    ) -> Mapping[str, Any]:
         """Get the latest reading if it hasn't expired"""
         if not self.latest_reading:
-            return {}
+            # Return a default reading when no speech has been heard
+            return {
+                "text_heard": "",
+                "sentiment": "None",
+                "time": datetime.now().isoformat()
+            }
         
         # Check if reading has expired
         time_heard = self.latest_reading["time"]
         expiration_time = time_heard + timedelta(seconds=self.reading_expiration_seconds)
         
         if datetime.now() > expiration_time:
-            # Reading has expired, clear it
+            # Reading has expired, clear it and return default
             self.latest_reading = None
-            return {}
+            return {
+                "text_heard": "",
+                "sentiment": "None",
+                "time": datetime.now().isoformat()
+            }
         
         # Return the reading
         return {
-            "text_heard": SensorReading(
-                value=self.latest_reading["text_heard"],
-                timestamp=time_heard
-            ),
-            "sentiment": SensorReading(
-                value=self.latest_reading["sentiment"],
-                timestamp=time_heard
-            ),
-            "time": SensorReading(
-                value=time_heard.isoformat(),
-                timestamp=time_heard
-            )
+            "text_heard": self.latest_reading["text_heard"],
+            "sentiment": self.latest_reading["sentiment"],
+            "time": time_heard.isoformat()
         }
 
     async def do_command(
