@@ -143,6 +143,7 @@ class MicSpeechSentiment(Sensor, EasyResource):
                         
                         # Get sentiment analysis
                         sentiment_result = await self.sentiment_service.do_command({
+                            "command": "get_sentiment",
                             "text": text
                         })
                         
@@ -156,6 +157,8 @@ class MicSpeechSentiment(Sensor, EasyResource):
                             "sentiment": sentiment,
                             "time": datetime.now()
                         }
+                    else:
+                        self.logger.info("No speech heard")
                         
                 except Exception as e:
                     self.logger.error(f"Error in listening loop: {e}")
@@ -181,7 +184,8 @@ class MicSpeechSentiment(Sensor, EasyResource):
             return {
                 "text_heard": "",
                 "sentiment": "None",
-                "time": datetime.now().isoformat()
+                "time": datetime.now().isoformat(),
+                "is_listening": self.is_listening
             }
         
         # Check if reading has expired
@@ -194,14 +198,16 @@ class MicSpeechSentiment(Sensor, EasyResource):
             return {
                 "text_heard": "",
                 "sentiment": "None",
-                "time": datetime.now().isoformat()
+                "time": datetime.now().isoformat(),
+                "is_listening": self.is_listening
             }
         
         # Return the reading
         return {
             "text_heard": self.latest_reading["text_heard"],
             "sentiment": self.latest_reading["sentiment"],
-            "time": time_heard.isoformat()
+            "time": time_heard.isoformat(),
+            "is_listening": self.is_listening
         }
 
     async def do_command(
